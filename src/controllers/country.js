@@ -46,3 +46,46 @@ exports.getCountry = async (req, res) => {
     });
   }
 };
+
+exports.getAllCountry = async (req, res) => {
+  try {
+    const countrys = await country.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+
+    res.send({
+      status: "success",
+      data: countrys,
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
+
+exports.deleteCountry = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await country.destroy({
+      where: {
+        id,
+      },
+    });
+
+    res.send({
+      status: "success",
+      message: "delete country successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
