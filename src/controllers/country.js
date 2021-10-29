@@ -21,3 +21,28 @@ exports.addCountrys = async (req, res) => {
     });
   }
 };
+
+exports.getCountry = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const countrys = await country.findOne({
+      where: {
+        id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+
+    res.send({
+      status: "success",
+      data: countrys,
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
