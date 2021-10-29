@@ -1,60 +1,66 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('trips', {
+    await queryInterface.createTable("trips", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       country: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "countries",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       accomodation: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       transportation: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       eat: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       day: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       night: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       dateTrip: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       price: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       quota: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       image: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('trips');
-  }
+    await queryInterface.dropTable("trips");
+  },
 };
