@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   transaction.init({
-    id: DataTypes.INTEGER,
     counterQty: DataTypes.INTEGER,
     total: DataTypes.INTEGER,
     status: DataTypes.STRING,

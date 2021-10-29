@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   trip.init({
-    id: DataTypes.INTEGER,
     title: DataTypes.STRING,
     country: DataTypes.INTEGER,
     accomodation: DataTypes.STRING,
