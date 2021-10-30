@@ -25,6 +25,13 @@ const {
 } = require("../controllers/trip");
 
 const { auth, adminOnly } = require("../middleware/auth");
+const {
+  getTransactions,
+  getTransactionId,
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
+} = require("../controllers/transaction");
 
 // Route
 router.post("/register", register);
@@ -43,5 +50,11 @@ router.get("/trip/:id", getTripId);
 router.post("/trip", auth, addTrip);
 router.patch("/trip/:id", auth, updateTrip);
 router.delete("/trip/:id", auth, deleteTrip);
+
+router.get("/transaction", auth, getTransactions);
+router.get("/transaction/:id", auth, getTransactionId);
+router.post("/transaction", auth, addTransaction);
+router.patch("/transaction/:id", auth, updateTransaction);
+router.delete("/transaction/:id", auth, deleteTransaction);
 
 module.exports = router;
