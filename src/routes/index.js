@@ -10,8 +10,12 @@ const {
   deleteCountry,
   updateCountry,
 } = require("../controllers/country");
+const { register, login } = require("../controllers/auth");
 
 // Route
+router.post("/register", register);
+router.post("/login", login);
+
 router.post("/country", addCountrys);
 router.get("/country", getAllCountry);
 router.get("/country/:id", getCountry);
