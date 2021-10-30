@@ -2,7 +2,8 @@ const { country } = require("../../models");
 
 exports.addCountrys = async (req, res) => {
   try {
-    await country.create(req.body);
+    const { adminOnly } = req.user;
+    await country.create(req.body, adminOnly);
     const data = await country.findAll({
       attributes: {
         exclude: ["createdAt", "updatedAt"],
@@ -71,11 +72,13 @@ exports.getAllCountry = async (req, res) => {
 exports.updateCountry = async (req, res) => {
   try {
     const { id } = req.params;
+    const { adminOnly } = req.user;
 
     await country.update(req.body, {
       where: {
         id,
       },
+      adminOnly,
     });
     const data = await country.findOne({
       where: {
@@ -102,11 +105,14 @@ exports.updateCountry = async (req, res) => {
 
 exports.deleteCountry = async (req, res) => {
   const { id } = req.params;
+  const { adminOnly } = req.user;
+
   try {
     await country.destroy({
       where: {
         id,
       },
+      adminOnly,
     });
 
     res.send({
