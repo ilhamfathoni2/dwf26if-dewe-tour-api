@@ -16,6 +16,7 @@ const {
   addTrip,
   getTripId,
   updateTrip,
+  deleteTrip,
 } = require("../controllers/trip");
 
 const { auth, adminOnly } = require("../middleware/auth");
@@ -34,5 +35,6 @@ router.get("/trip", getTrips);
 router.get("/trip/:id", getTripId);
 router.post("/trip", auth, addTrip);
 router.patch("/trip/:id", auth, updateTrip);
+router.delete("/trip/:id", auth, deleteTrip);
 
 module.exports = router;

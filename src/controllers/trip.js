@@ -122,7 +122,40 @@ exports.updateTrip = async (req, res) => {
     });
     res.send({
       status: "success",
-      message: "Add trip success",
+      message: "Edit trip success",
+      datas: data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
+
+exports.deleteTrip = async (req, res) => {
+  try {
+    const { idUser } = req.user;
+    const { id } = req.params;
+
+    await trip.destroy({
+      where: {
+        id,
+      },
+      idUser,
+    });
+    const data = await trip.findOne({
+      where: {
+        id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    res.send({
+      status: "success",
+      message: "Delete trip success",
       datas: data,
     });
   } catch (error) {
