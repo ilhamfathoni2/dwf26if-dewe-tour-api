@@ -68,6 +68,38 @@ exports.getAllCountry = async (req, res) => {
   }
 };
 
+exports.updateCountry = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await country.update(req.body, {
+      where: {
+        id,
+      },
+    });
+    const data = await country.findOne({
+      where: {
+        id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+
+    res.send({
+      status: "success",
+      message: "Update country success",
+      data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
+
 exports.deleteCountry = async (req, res) => {
   const { id } = req.params;
   try {
