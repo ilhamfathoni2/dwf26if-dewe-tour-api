@@ -10,7 +10,12 @@ const {
   deleteCountry,
   updateCountry,
 } = require("../controllers/country");
-const { register, login } = require("../controllers/auth");
+const {
+  register,
+  login,
+  deleteUser,
+  getAllUsers,
+} = require("../controllers/auth");
 const {
   getTrips,
   addTrip,
@@ -24,6 +29,8 @@ const { auth, adminOnly } = require("../middleware/auth");
 // Route
 router.post("/register", register);
 router.post("/login", login);
+router.get("/users", auth, adminOnly, getAllUsers);
+router.delete("/users/:id", auth, adminOnly, deleteUser);
 
 router.post("/country", auth, adminOnly, addCountrys);
 router.get("/country", getAllCountry);

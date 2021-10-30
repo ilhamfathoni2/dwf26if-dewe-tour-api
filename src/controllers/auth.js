@@ -10,7 +10,7 @@ exports.register = async (req, res) => {
     password: Joi.string().min(6).required(),
     phone: Joi.string().min(11).required(),
     address: Joi.string().required(),
-    role: Joi.string().required(),
+    role: Joi.string(),
   });
 
   const { error } = schema.validate(req.body);
@@ -130,6 +130,64 @@ exports.login = async (req, res) => {
         role: userExist.role,
         token,
       },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const { adminOnly } = req.user;
+
+    const data = await user.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+      adminOnly,
+    });
+
+    res.send({
+      status: "success",
+      message: "Get data user success",
+      data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { idUser } = req.user;
+    const { id } = req.params;
+
+    await user.destroy({
+      where: {
+        id,
+      },
+      idUser,
+    });
+    const data = await user.findOne({
+      where: {
+        id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    res.send({
+      status: "success",
+      message: "Delete user success",
+      datas: data,
     });
   } catch (error) {
     console.log(error);
