@@ -12,14 +12,16 @@ const {
 } = require("../controllers/country");
 const { register, login } = require("../controllers/auth");
 
+const { auth, adminOnly } = require("../middleware/auth");
+
 // Route
 router.post("/register", register);
 router.post("/login", login);
 
-router.post("/country", addCountrys);
+router.post("/country", auth, adminOnly, addCountrys);
 router.get("/country", getAllCountry);
 router.get("/country/:id", getCountry);
-router.patch("/country/:id", updateCountry);
-router.delete("/country/:id", deleteCountry);
+router.patch("/country/:id", auth, adminOnly, updateCountry);
+router.delete("/country/:id", auth, adminOnly, deleteCountry);
 
 module.exports = router;
