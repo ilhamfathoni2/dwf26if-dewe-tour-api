@@ -25,6 +25,8 @@ const {
 } = require("../controllers/trip");
 
 const { auth, adminOnly } = require("../middleware/auth");
+const { uploadFile } = require("../middleware/uploadFile");
+
 const {
   getTransactions,
   getTransactionId,
@@ -47,7 +49,7 @@ router.delete("/country/:id", auth, adminOnly, deleteCountry);
 
 router.get("/trip", getTrips);
 router.get("/trip/:id", getTripId);
-router.post("/trip", auth, addTrip);
+router.post("/trip", auth, uploadFile("image"), addTrip);
 router.patch("/trip/:id", auth, updateTrip);
 router.delete("/trip/:id", auth, deleteTrip);
 

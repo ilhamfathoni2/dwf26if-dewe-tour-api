@@ -1,4 +1,5 @@
 const { trip, country } = require("../../models");
+const Joi = require("joi");
 
 exports.getTrips = async (req, res) => {
   try {
@@ -63,9 +64,48 @@ exports.getTripId = async (req, res) => {
 };
 
 exports.addTrip = async (req, res) => {
+  // const schema = Joi.object({
+  //   title: Joi.string().required(),
+  //   countryId: Joi.number().required(),
+  //   accomodation: Joi.string().required(),
+  //   transportation: Joi.string().required(),
+  //   eat: Joi.string().required(),
+  //   day: Joi.string().required(),
+  //   night: Joi.string().required(),
+  //   dateTrip: Joi.date().required(),
+  //   price: Joi.number().required(),
+  //   quota: Joi.string().required(),
+  //   description: Joi.string().required(),
+  // });
+
+  // const { error } = schema.validate(req.body);
+
+  // if (error)
+  //   return res.status(400).send({
+  //     error: {
+  //       message: error.details[0].message,
+  //     },
+  //   });
+
   try {
     const { idUser } = req.user;
-    await trip.create(req.body, idUser);
+
+    await trip.create({
+      title: req.body.title,
+      countryId: req.body.countryId,
+      accomodation: req.body.accomodation,
+      transportation: req.body.transportation,
+      eat: req.body.eat,
+      day: req.body.day,
+      night: req.body.night,
+      dateTrip: req.body.dateTrip,
+      price: req.body.price,
+      quota: req.body.quota,
+      description: req.body.description,
+      image: req.files.image[0].filename,
+      idUser,
+    });
+
     const data = await trip.findAll({
       include: [
         {
@@ -76,16 +116,21 @@ exports.addTrip = async (req, res) => {
         },
       ],
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt", "updatedAt", "countryId"],
       },
     });
+
+    data = JSON.parse(JSON.stringify(data));
+
     res.send({
       status: "success",
       message: "Add trip success",
-      datas: data,
+      data: {
+        data,
+        image: "http://localhost:5000/uploads/" + data.image,
+      },
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send({
       status: "failed",
       message: "Server Error",

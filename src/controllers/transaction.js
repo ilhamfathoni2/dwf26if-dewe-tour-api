@@ -15,7 +15,7 @@ exports.getTransactions = async (req, res) => {
         {
           model: user,
           attributes: {
-            exclude: ["createdAt", "updatedAt"],
+            exclude: ["createdAt", "updatedAt", "password"],
           },
         },
       ],

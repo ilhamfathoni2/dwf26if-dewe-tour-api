@@ -1,9 +1,41 @@
 const { country } = require("../../models");
+const Joi = require("joi");
 
 exports.addCountrys = async (req, res) => {
+  const { adminOnly } = req.user;
+
+  const schema = Joi.object({
+    name: Joi.string().required(),
+  });
+
+  const { error } = schema.validate(req.body);
+
+  if (error)
+    return res.status(400).send({
+      error: {
+        message: error.details[0].message,
+      },
+    });
+
   try {
-    const { adminOnly } = req.user;
-    await country.create(req.body, adminOnly);
+    const countryExist = await country.findOne({
+      where: {
+        name: req.body.name,
+      },
+    });
+
+    if (countryExist) {
+      return res.status(400).send({
+        status: "failed",
+        message: "Country already exist",
+      });
+    }
+
+    await country.create({
+      name: req.body.name,
+      adminOnly,
+    });
+
     const data = await country.findAll({
       attributes: {
         exclude: ["createdAt", "updatedAt"],
@@ -12,7 +44,7 @@ exports.addCountrys = async (req, res) => {
     res.send({
       status: "success",
       message: "Add country success",
-      datas: data,
+      data: data,
     });
   } catch (error) {
     console.log(error);
