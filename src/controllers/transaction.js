@@ -1,4 +1,5 @@
 const { trip, user, transaction } = require("../../models");
+const Joi = require("joi");
 
 exports.getTransactions = async (req, res) => {
   try {
@@ -80,9 +81,36 @@ exports.getTransactionId = async (req, res) => {
 };
 
 exports.addTransaction = async (req, res) => {
+  // const schema = Joi.object({
+  //   counterQty: Joi.number().required(),
+  //   total: Joi.number().required(),
+  //   accomodation: Joi.string().required(),
+  //   status: Joi.string().required(),
+  //   tripId: Joi.number().required(),
+  //   userId: Joi.number().required(),
+  // });
+
+  // const { error } = schema.validate(req.body);
+
+  // if (error)
+  //   return res.status(400).send({
+  //     error: {
+  //       message: error.details[0].message,
+  //     },
+  //   });
+
   try {
     const { idUser } = req.user;
-    await transaction.create(req.body, idUser);
+    await transaction.create({
+      counterQty: req.body.counterQty,
+      total: req.body.total,
+      accomodation: req.body.accomodation,
+      status: req.body.status,
+      attachment: req.files.attachment[0].filename,
+      tripId: req.body.tripId,
+      userId: req.body.userId,
+      idUser,
+    });
     const data = await transaction.findAll({
       include: [
         {
@@ -102,10 +130,16 @@ exports.addTransaction = async (req, res) => {
         exclude: ["createdAt", "updatedAt"],
       },
     });
+
+    data = JSON.parse(JSON.stringify(data));
+
     res.send({
       status: "success",
       message: "Transaction success",
-      datas: data,
+      datas: {
+        data,
+        attachment: "http://localhost:5000/uploads/" + data.attachment,
+      },
     });
   } catch (error) {
     console.log(error);

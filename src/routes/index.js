@@ -26,6 +26,7 @@ const {
 
 const { auth, adminOnly } = require("../middleware/auth");
 const { uploadFile } = require("../middleware/uploadFile");
+const { attachmentFile } = require("../middleware/attachment");
 
 const {
   getTransactions,
@@ -55,7 +56,7 @@ router.delete("/trip/:id", auth, deleteTrip);
 
 router.get("/transaction", auth, getTransactions);
 router.get("/transaction/:id", auth, getTransactionId);
-router.post("/transaction", auth, addTransaction);
+router.post("/transaction", auth, attachmentFile("attachment"), addTransaction);
 router.patch("/transaction/:id", auth, updateTransaction);
 router.delete("/transaction/:id", auth, deleteTransaction);
 
