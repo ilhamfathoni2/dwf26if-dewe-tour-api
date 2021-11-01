@@ -1,4 +1,4 @@
-const { trip, country } = require("../../models");
+const { trip, country, image } = require("../../models");
 const Joi = require("joi");
 
 exports.getTrips = async (req, res) => {
@@ -64,33 +64,33 @@ exports.getTripId = async (req, res) => {
 };
 
 exports.addTrip = async (req, res) => {
-  // const schema = Joi.object({
-  //   title: Joi.string().required(),
-  //   countryId: Joi.number().required(),
-  //   accomodation: Joi.string().required(),
-  //   transportation: Joi.string().required(),
-  //   eat: Joi.string().required(),
-  //   day: Joi.string().required(),
-  //   night: Joi.string().required(),
-  //   dateTrip: Joi.date().required(),
-  //   price: Joi.number().required(),
-  //   quota: Joi.string().required(),
-  //   description: Joi.string().required(),
-  // });
+  const schema = Joi.object({
+    title: Joi.string().required(),
+    countryId: Joi.number().required(),
+    accomodation: Joi.string().required(),
+    transportation: Joi.string().required(),
+    eat: Joi.string().required(),
+    day: Joi.string().required(),
+    night: Joi.string().required(),
+    dateTrip: Joi.date().required(),
+    price: Joi.number().required(),
+    quota: Joi.string().required(),
+    description: Joi.string().required(),
+  });
 
-  // const { error } = schema.validate(req.body);
+  const { error } = schema.validate(req.body);
 
-  // if (error)
-  //   return res.status(400).send({
-  //     error: {
-  //       message: error.details[0].message,
-  //     },
-  //   });
+  if (error)
+    return res.status(400).send({
+      error: {
+        message: error.details[0].message,
+      },
+    });
 
   try {
     const { idUser } = req.user;
 
-    await trip.create({
+    const newTrip = await trip.create({
       title: req.body.title,
       countryId: req.body.countryId,
       accomodation: req.body.accomodation,
@@ -106,30 +106,35 @@ exports.addTrip = async (req, res) => {
       idUser,
     });
 
-    const data = await trip.findAll({
-      include: [
-        {
-          model: country,
-          attributes: {
-            exclude: ["createdAt", "updatedAt"],
-          },
+    if (newTrip) {
+      let data = await trip.findOne({
+        where: {
+          id: newTrip.id,
         },
-      ],
-      attributes: {
-        exclude: ["createdAt", "updatedAt", "countryId"],
-      },
-    });
+        include: [
+          {
+            model: country,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+          },
+        ],
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "countryId"],
+        },
+      });
 
-    data = JSON.parse(JSON.stringify(data));
+      data = JSON.parse(JSON.stringify(data));
 
-    res.send({
-      status: "success",
-      message: "Add trip success",
-      data: {
-        data,
-        image: "http://localhost:5000/uploads/" + data.image,
-      },
-    });
+      res.send({
+        status: "success",
+        message: "Add trip success",
+        data: {
+          data,
+          image: "http://localhost:5000/uploads/" + data.image,
+        },
+      });
+    }
   } catch (error) {
     res.status(500).send({
       status: "failed",
