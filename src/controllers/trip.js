@@ -89,6 +89,12 @@ exports.addTrip = async (req, res) => {
 
   try {
     const { idUser } = req.user;
+    const { image } = req.files;
+
+    const allImage = [];
+    for (let item of image) {
+      allImage.push(item.filename);
+    }
 
     const newTrip = await trip.create({
       title: req.body.title,
@@ -102,7 +108,7 @@ exports.addTrip = async (req, res) => {
       price: req.body.price,
       quota: req.body.quota,
       description: req.body.description,
-      image: req.files.image[0].filename,
+      image: JSON.stringify(allImage),
       idUser,
     });
 
@@ -136,6 +142,7 @@ exports.addTrip = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send({
       status: "failed",
       message: "Server Error",

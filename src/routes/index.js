@@ -50,9 +50,9 @@ router.delete("/country/:id", auth, adminOnly, deleteCountry);
 
 router.get("/trip", getTrips);
 router.get("/trip/:id", getTripId);
-router.post("/trip", auth, uploadFile("image"), addTrip);
-router.patch("/trip/:id", auth, updateTrip);
-router.delete("/trip/:id", auth, deleteTrip);
+router.post("/trip", auth, adminOnly, uploadFile("image"), addTrip);
+router.patch("/trip/:id", auth, adminOnly, updateTrip);
+router.delete("/trip/:id", auth, adminOnly, deleteTrip);
 
 router.get("/transaction", auth, getTransactions);
 router.get("/transaction/:id", auth, getTransactionId);

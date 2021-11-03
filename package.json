@@ -19,6 +19,8 @@
   "homepage": "https://github.com/ilhamfathoni2/dwf26if-dewe-tour-api#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "concurrently": "^6.3.0",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "joi": "^17.4.2",
@@ -27,6 +29,6 @@
     "mysql2": "^2.3.2",
     "nodemon": "^2.0.14",
     "sequelize": "^6.8.0",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.3.0"
   }
 }
